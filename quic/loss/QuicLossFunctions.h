@@ -15,6 +15,7 @@
 #include <quic/d6d/QuicD6DStateFunctions.h>
 #include <quic/flowcontrol/QuicFlowController.h>
 #include <quic/logging/QLoggerConstants.h>
+#include <quic/state/AckHandlers.h>
 #include <quic/state/QuicStateFunctions.h>
 #include <quic/state/SimpleFrameFunctions.h>
 #include <quic/state/StateData.h>
@@ -469,7 +470,7 @@ void markZeroRttPacketsLost(
         CHECK(conn.outstandings.packetCount[PacketNumberSpace::AppData]);
         --conn.outstandings.packetCount[PacketNumberSpace::AppData];
       }
-      iter = conn.outstandings.packets.erase(iter);
+      iter = removeOutstandingPackets(conn, iter, iter + 1);
       iter = getNextOutstandingPacket(conn, PacketNumberSpace::AppData, iter);
     } else {
       iter =
